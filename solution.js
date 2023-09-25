@@ -7,49 +7,54 @@ const array = [
     { id: 6, name: "Farhan", city: "Islamabad" }
 ];
 
-console.log(array);
+function GroupByUsingReduce(array, attribute) {
+    let result = array.reduce((acc, user) => {
+        acc[user[attribute]] = (acc[user[attribute]] || []).concat(user);
+        return acc
+    }, {})
+    return result
+}
+
+const GroupByUsingMap = (array, attribute) => {
+    let result = {}
+    array.map(user => {
+        if (user[attribute] in result) {
+            result[user[attribute]].push(user)
+        }
+        else {
+            result[user[attribute]] = [user]
+        }
+    })
+
+    return result
+}
+
+const GroupByUsingForIn = function (attribute) {
+    let result = {}
+
+    for (user in array) {
+        if (array[user][attribute] in result) {
+            result[array[user][attribute]].push(array[user])
+        }
+        else {
+            result[array[user][attribute]] = [array[user]]
+        }
+    }
+
+    return result
+}
 
 // ------------ Using Reduce ------------------
 console.log("------------ Using Reduce ------------------")
 
-console.log(array.reduce((acc, user) => {
-    if (user.city in acc){
-        acc[user.city].push(user)
-    }
-    else {
-        acc[user.city] = [user]
-    }
-    return acc
-},{}))
+console.log(GroupByUsingReduce(array, 'name'));
 
 // ------------ Using Map ------------------
-// if we use map, we have to first declare an object to store the result
 console.log("------------ Using Map ------------------")
 
-let mapObject = {}
-array.map(user => {
-     if (user.city in mapObject){
-        mapObject[user.city].push(user)
-    }
-    else {
-        mapObject[user.city] = [user]
-    }
-})
-
-console.log(mapObject)
+console.log(GroupByUsingMap(array, 'city'));
 
 // ------------ Using For in ------------------
 console.log("------------ Using For in ------------------")
 
-let forInObject = {}
-
-for(user in array) {
-    if (array[user].city in forInObject) {
-        forInObject[array[user].city].push(array[user])
-    }
-    else {
-        forInObject[array[user].city] = [array[user]]
-    }
-}
-
-console.log(forInObject)
+console.log(GroupByUsingForIn('id'));
